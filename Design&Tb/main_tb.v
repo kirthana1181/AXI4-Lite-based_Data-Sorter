@@ -20,13 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module main_tb;
-        parameter WIDTH = 8, DEPTH = 10 ;
+        parameter WIDTH = 32, DEPTH = 10 ;
         reg clk,rst;
         reg ival_wr_en, val_wr_en;
         reg [31:0] AWADDR;
         reg [31:0] WDATA;
         
-        wire [WIDTH-1:0] mem;
+        wire [0:WIDTH-1] mem;
         wire WREADY,AWREADY,BVALID,AWVALID,WVALID,BREADY;
         wire [1:0]BRESP;
         wire [DEPTH-1:0]val_fifo_ctr, ival_fifo_ctr;
@@ -62,7 +62,7 @@ module main_tb;
             AWADDR = 32'h04; WDATA[31:24] = 8'h00; #10 // --> ival          3
             AWADDR = 32'h00; WDATA[31:24] = 8'hA7; #10 // -->mem            
             AWADDR = 32'h04; #10//                                          4
-            AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10 //--> val      5
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10 //--> val      5         
             
             //val_rd_en = 1; ival_rd_en = 1; #20 // shall be used when the read channels are being added
             $finish;
