@@ -43,26 +43,38 @@ module main_tb;
         initial begin
             clk = 1'b1; rst = 1'b1;             
             AWADDR = 0; WDATA = 0;
-            val_wr_en = 1'b1; ival_wr_en = 1'b1; //ival_rd_en =0; val_rd_en = 0;
+            val_wr_en = 1'b1; ival_wr_en = 1'b1; 
+            //ival_rd_en =0; val_rd_en = 0;
         end
          
         always #5 clk = ~clk;
         initial begin
-            rst = 1'b0;                                     //      val    ival
+//            rst = 1'b1; #5
+            rst = 1'b0; #5                                   //      val    ival
             AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10 //--> val      1     
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA4; #10 // -->ival          +1
             AWADDR = 32'h00; WDATA[31:24] = 8'hA5; #10 // -->mem 
             AWADDR = 32'h04; #10                       //             2   
             AWADDR = 32'h04; WDATA[31:24] = 8'h00; #10 // --> ival          1
             AWADDR = 32'h00; WDATA[31:24] = 8'hA6; #10 // -->mem            
-            AWADDR = 32'h04; #10//                                          2
+            AWADDR = 32'h04; #10                       //-->ival            2
             AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10 //--> val      3
             
             AWADDR = 32'h00; WDATA[31:24] = 8'hA5; #10 // -->mem 
-            AWADDR = 32'h04; #10                       //             4   
+            AWADDR = 32'h04; #10                       // -->val      4   
             AWADDR = 32'h04; WDATA[31:24] = 8'h00; #10 // --> ival          3
             AWADDR = 32'h00; WDATA[31:24] = 8'hA7; #10 // -->mem            
             AWADDR = 32'h04; #10//                                          4
             AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10 //--> val      5         
+            AWADDR = 32'h00; WDATA[31:24] = 8'hA5; #10 //--> mem
+            AWADDR = 32'h04; #10                       //--> val      6    
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10//--> val       7
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10//--> val       8
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA2; #10//-->ival             5
+            AWADDR = 32'h04; WDATA[31:24] = 8'hA5; #10//--> val       9
+            
+            AWADDR = 32'h00; WDATA[31:24] = 8'hA5; #10
+            AWADDR = 32'h04; #10                      //--> val       10
             
             //val_rd_en = 1; ival_rd_en = 1; #20 // shall be used when the read channels are being added
             $finish;
